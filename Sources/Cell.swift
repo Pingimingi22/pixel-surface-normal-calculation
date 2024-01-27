@@ -12,7 +12,7 @@ class Cell {
     var xIndex: Int = 0
     var yIndex: Int = 0
     
-    var value: Int = 1
+    var value: Int = 0
     
     var surfaceNormals: [Vector2] = []
     

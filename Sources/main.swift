@@ -95,10 +95,112 @@ while Raylib.windowShouldClose == false {
             world[x][y].DrawSurfaceNormals(gridSpacing: gridSpacing)
         }
     }
-    Raylib.drawRectangle(Int32(floor((mousePosition.x/Float(gridSpacing))) * gridSpacing),
-                         Int32(floor((mousePosition.y/Float(gridSpacing))) * gridSpacing),
+    
+    var mousePosXSnapped = Int32(floor((mousePosition.x/Float(gridSpacing))) * gridSpacing)
+    var mousePosYSnapped = Int32(floor((mousePosition.y/Float(gridSpacing))) * gridSpacing)
+    
+    Raylib.drawRectangle(mousePosXSnapped,
+                         mousePosYSnapped,
                          Int32(gridSpacing), Int32(gridSpacing),
                          .darkBlue)
+    
+    var magnifiedOccupiedCells: [Cell] = [];
+    var magnifiedUnoccupiedCells: [Cell] = [];
+    
+    magnifiedOccupiedCells.removeAll()
+    magnifiedUnoccupiedCells.removeAll()
+    for x in 0..<4 {
+        for y in 0..<4 {
+            
+            if calculatedIndex + Int32(x) >= worldSize {
+                continue;
+            }
+            if calculatedIndexJ + Int32(y) >= worldSize {
+                continue;
+            }
+            if calculatedIndex - Int32(x) < 0 {
+                continue;
+            }
+            if calculatedIndexJ - Int32(y) < 0 {
+                continue;
+            }
+            
+            if world[Int(calculatedIndex) + x][Int(calculatedIndexJ) + y].value == 0 {
+                magnifiedUnoccupiedCells.append(world[Int(calculatedIndex) + x][Int(calculatedIndexJ) + y]);
+            } else {
+                magnifiedOccupiedCells.append(world[Int(calculatedIndex) + x][Int(calculatedIndexJ) + y]);
+            }
+        }
+    }
+    
+    var averageOccupiedPosition: Vector2 = Vector2(x: 1,y: 1)
+    var averageUnoccupiedPosition: Vector2 = Vector2(x: 1, y: 1)
+    var sumOfXCoords: Float = 0
+    var sumOfYCoords: Float = 0
+    var sumOfUnoccupiedXCoords: Float = 0
+    var sumOfUnoccupiedYCoords: Float = 0
+    /*for x in 0..<magnifiedOccupiedCells.count {
+        sumOfXCoords += Float(magnifiedOccupiedCells[x].xIndex)
+        sumOfYCoords += Float(magnifiedOccupiedCells[x].yIndex)
+    }
+    for x in 0..<magnifiedUnoccupiedCells.count {
+        sumOfXCoords += Float(magnifiedUnoccupiedCells[x].xIndex)
+        sumOfYCoords += Float(magnifiedUnoccupiedCells[x].yIndex)
+    }
+    averageOccupiedPosition.x = magnifiedOccupiedCells.count == 0 ?
+                                                                0 :
+                                                                sumOfXCoords/Float(magnifiedOccupiedCells.count) * gridSpacing
+    averageOccupiedPosition.y = magnifiedOccupiedCells.count == 0 ?
+                                                                0 :
+                                                                sumOfYCoords/Float(magnifiedOccupiedCells.count) * gridSpacing
+    
+    
+    averageUnoccupiedPosition.x = magnifiedUnoccupiedCells.count == 0 ?
+                                                                    0 :
+                                                                    sumOfUnoccupiedXCoords/Float(magnifiedUnoccupiedCells.count) * gridSpacing
+    averageUnoccupiedPosition.y = magnifiedUnoccupiedCells.count == 0 ?
+                                                                    0 :
+                                                                    sumOfUnoccupiedYCoords/Float(magnifiedUnoccupiedCells.count) * gridSpacing
+    
+    var occupiedToUnoccupied = averageUnoccupiedPosition - averageOccupiedPosition*/
+    
+    for x in 0..<magnifiedUnoccupiedCells.count {
+        averageUnoccupiedPosition.x += Float(magnifiedUnoccupiedCells[x].xIndex) * gridSpacing
+        averageUnoccupiedPosition.y += Float(magnifiedUnoccupiedCells[x].yIndex) * gridSpacing
+    }
+    for x in 0..<magnifiedOccupiedCells.count {
+        averageOccupiedPosition.x += Float(magnifiedOccupiedCells[x].xIndex) * gridSpacing
+        averageOccupiedPosition.y += Float(magnifiedOccupiedCells[x].yIndex) * gridSpacing
+    }
+    
+    averageUnoccupiedPosition.x = magnifiedUnoccupiedCells.count > 0 ? averageUnoccupiedPosition.x / Float(magnifiedUnoccupiedCells.count) : 0
+    averageUnoccupiedPosition.y = magnifiedUnoccupiedCells.count > 0 ? averageUnoccupiedPosition.y / Float(magnifiedUnoccupiedCells.count) : 0
+    
+    averageOccupiedPosition.x = magnifiedOccupiedCells.count > 0 ? averageOccupiedPosition.x / Float(magnifiedOccupiedCells.count) : 0
+    averageOccupiedPosition.y = magnifiedOccupiedCells.count > 0 ? averageOccupiedPosition.y / Float(magnifiedOccupiedCells.count) : 0
+    
+    
+    if averageOccupiedPosition.x != 0 &&
+        averageOccupiedPosition.y != 0 &&
+        averageUnoccupiedPosition.x != 0 &&
+        averageUnoccupiedPosition.y != 0 {
+        Raylib.drawLine(Int32(averageOccupiedPosition.x), Int32(averageOccupiedPosition.y), Int32(averageUnoccupiedPosition.x), Int32(averageUnoccupiedPosition.y), .green)
+    }
+    
+    Raylib.drawText("Num of magnified occupied cells: \(magnifiedOccupiedCells.count)", 5, 30, 15, .green)
+    Raylib.drawText("Num of magnified unoccupied cells: \(magnifiedUnoccupiedCells.count)", 5, 45, 15, .green)
+    Raylib.drawText("Average occupied position: \(averageOccupiedPosition.x), \(averageOccupiedPosition.y)", 5, 60, 15, .green)
+    Raylib.drawText("Average unoccupied position: \(averageUnoccupiedPosition.x), \(averageUnoccupiedPosition.y)", 5, 75, 15, .green)
+    
+    if(magnifiedUnoccupiedCells.count > 0){
+        Raylib.drawText("Position of first unoccupied cell: \(magnifiedUnoccupiedCells[0].xIndex), \(magnifiedUnoccupiedCells[0].yIndex)", 5, 90, 15, .green)
+        Raylib.drawText("World position of first unoccupied cell: \(Float(magnifiedUnoccupiedCells[0].xIndex) * gridSpacing), \(Float(magnifiedUnoccupiedCells[0].yIndex) * gridSpacing)", 5, 105, 15, .green)
+    }
+    
+    
+    Raylib.drawRectangleLines(mousePosXSnapped, mousePosYSnapped, Int32(gridSpacing) * 4, Int32(gridSpacing) * 4, .red)
+    
+    Raylib.drawCircle(Int32(sumOfXCoords), Int32(sumOfYCoords), 5, .orange)
     
     // draw
     Raylib.beginDrawing()
