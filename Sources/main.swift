@@ -16,7 +16,7 @@ let worldSize = 30
 
 let magnifySize = 6
 
-Raylib.initWindow(screenWidth, screenHeight, "Averaged surface normals")
+Raylib.initWindow(Int32(gridSpacing * Float(worldSize)), Int32(gridSpacing * Float(worldSize)), "Averaged surface normals")
 Raylib.setTargetFPS(60)
 
 for index in 0...worldSize-1 {
@@ -183,15 +183,15 @@ while Raylib.windowShouldClose == false {
     Raylib.drawText("Average occupied position: \(averageOccupiedPosition.x), \(averageOccupiedPosition.y)", 5, 60, 15, .black)
     Raylib.drawText("Average unoccupied position: \(averageUnoccupiedPosition.x), \(averageUnoccupiedPosition.y)", 5, 75, 15, .black)
     
-    Raylib.drawText("Right mouse to set a cell.", 5, screenHeight-70, 15, .black)
-    Raylib.drawText("Left mouse to clear a cell.", 5, screenHeight-50, 15, .black)
-    Raylib.drawText("Left bracket to calculate the surface normals for each cell.", 5, screenHeight-30, 15, .black)
+    Raylib.drawText("Right mouse to set a cell.", 5, screenHeight-125, 15, .black)
+    Raylib.drawText("Left mouse to clear a cell.", 5, screenHeight-100, 15, .black)
+    Raylib.drawText("Left bracket to calculate the surface normals for each cell.", 5, screenHeight-75, 15, .black)
     
     Raylib.drawRectangleLines(mousePosXSnapped, mousePosYSnapped, Int32(gridSpacing) * Int32(magnifySize), Int32(gridSpacing) * Int32(magnifySize), .red)
     
     // draw
     Raylib.beginDrawing()
-    Raylib.clearBackground(.rayWhite)
+    Raylib.clearBackground(.gray)
     Raylib.drawFPS(10, 10)
     Raylib.endDrawing()
 }
