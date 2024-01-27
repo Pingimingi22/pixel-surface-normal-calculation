@@ -178,10 +178,10 @@ while Raylib.windowShouldClose == false {
         Raylib.drawLineEx(averageOccupiedPosition, averageOccupiedPosition + averagedSurfaceNormal, 5, .green)
     }
     
-    Raylib.drawText("Num of magnified occupied cells: \(magnifiedOccupiedCells.count)", 5, 30, 15, .black)
-    Raylib.drawText("Num of magnified unoccupied cells: \(magnifiedUnoccupiedCells.count)", 5, 45, 15, .black)
-    Raylib.drawText("Average occupied position: \(averageOccupiedPosition.x), \(averageOccupiedPosition.y)", 5, 60, 15, .black)
-    Raylib.drawText("Average unoccupied position: \(averageUnoccupiedPosition.x), \(averageUnoccupiedPosition.y)", 5, 75, 15, .black)
+    Raylib.drawText("Num of magnified occupied cells: \(magnifiedOccupiedCells.count)", 5, 5, 15, .black)
+    Raylib.drawText("Num of magnified unoccupied cells: \(magnifiedUnoccupiedCells.count)", 5, 25, 15, .black)
+    Raylib.drawText("Average occupied position: \(averageOccupiedPosition.x), \(averageOccupiedPosition.y)", 5, 45, 15, .black)
+    Raylib.drawText("Average unoccupied position: \(averageUnoccupiedPosition.x), \(averageUnoccupiedPosition.y)", 5, 65, 15, .black)
     
     Raylib.drawText("Right mouse to set a cell.", 5, screenHeight-125, 15, .black)
     Raylib.drawText("Left mouse to clear a cell.", 5, screenHeight-100, 15, .black)
@@ -192,7 +192,6 @@ while Raylib.windowShouldClose == false {
     // draw
     Raylib.beginDrawing()
     Raylib.clearBackground(.gray)
-    Raylib.drawFPS(10, 10)
     Raylib.endDrawing()
 }
 Raylib.closeWindow()
