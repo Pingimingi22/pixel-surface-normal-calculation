@@ -41,7 +41,7 @@ while Raylib.windowShouldClose == false {
     let calculatedIndex = Int32(floor((mousePosition.x/gridSpacing)));
     let calculatedIndexJ = Int32(floor((mousePosition.y/gridSpacing)))
     
-    if Raylib.isMouseButtonPressed(MouseButton.left) {
+    if Raylib.isMouseButtonDown(MouseButton.left) {
         if calculatedIndex < world.count
             && calculatedIndex >= 0
             && calculatedIndexJ < world.count
@@ -54,7 +54,7 @@ while Raylib.windowShouldClose == false {
             
         }
     }
-    if Raylib.isMouseButtonPressed(MouseButton.right) {
+    if Raylib.isMouseButtonDown(MouseButton.right) {
         if calculatedIndex < world.count
             && calculatedIndex >= 0
             && calculatedIndexJ < world.count
