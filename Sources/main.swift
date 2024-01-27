@@ -14,6 +14,8 @@ var world: [[Cell]] = []
 
 let worldSize = 30
 
+let magnifySize = 6
+
 Raylib.initWindow(screenWidth, screenHeight, "Averaged surface normals")
 Raylib.setTargetFPS(60)
 
@@ -109,8 +111,8 @@ while Raylib.windowShouldClose == false {
     
     magnifiedOccupiedCells.removeAll()
     magnifiedUnoccupiedCells.removeAll()
-    for x in 0..<4 {
-        for y in 0..<4 {
+    for x in 0..<magnifySize {
+        for y in 0..<magnifySize {
             
             if calculatedIndex + Int32(x) >= worldSize {
                 continue;
@@ -184,7 +186,21 @@ while Raylib.windowShouldClose == false {
         averageOccupiedPosition.y != 0 &&
         averageUnoccupiedPosition.x != 0 &&
         averageUnoccupiedPosition.y != 0 {
-        Raylib.drawLine(Int32(averageOccupiedPosition.x), Int32(averageOccupiedPosition.y), Int32(averageUnoccupiedPosition.x), Int32(averageUnoccupiedPosition.y), .green)
+        
+        
+        var averagedSurfaceNormal = Vector2(x: averageUnoccupiedPosition.x - averageOccupiedPosition.x,
+                                            y: averageUnoccupiedPosition.y - averageOccupiedPosition.y)
+        var magnitude = sqrt(averagedSurfaceNormal.x * averagedSurfaceNormal.x + averagedSurfaceNormal.y * averagedSurfaceNormal.y)
+        averagedSurfaceNormal.x /= magnitude
+        averagedSurfaceNormal.y /= magnitude
+        averagedSurfaceNormal.x *= 100
+        averagedSurfaceNormal.y *= 100
+        
+        Raylib.drawLine(Int32(averageOccupiedPosition.x), 
+                        Int32(averageOccupiedPosition.y),
+                        Int32(averageOccupiedPosition.x + averagedSurfaceNormal.x),
+                        Int32(averageOccupiedPosition.y + averagedSurfaceNormal.y),
+            .green)
     }
     
     Raylib.drawText("Num of magnified occupied cells: \(magnifiedOccupiedCells.count)", 5, 30, 15, .green)
@@ -198,7 +214,7 @@ while Raylib.windowShouldClose == false {
     }
     
     
-    Raylib.drawRectangleLines(mousePosXSnapped, mousePosYSnapped, Int32(gridSpacing) * 4, Int32(gridSpacing) * 4, .red)
+    Raylib.drawRectangleLines(mousePosXSnapped, mousePosYSnapped, Int32(gridSpacing) * Int32(magnifySize), Int32(gridSpacing) * Int32(magnifySize), .red)
     
     Raylib.drawCircle(Int32(sumOfXCoords), Int32(sumOfYCoords), 5, .orange)
     
